@@ -7,7 +7,7 @@ const list = Mock.mock({
       url: '@url',
       ip: '@ip',
       protocol: '@protocol',
-      'host|1': [80, 443],
+      'host|1': [80, 443], 
       domain: '@domain',
       email: '@email',
     },

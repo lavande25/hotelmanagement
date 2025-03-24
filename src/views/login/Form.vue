@@ -14,7 +14,7 @@
           </template>
         </a-input>
       </a-form-item>
-      <p class="text">请输入密码</p>
+      <p class="text">输入密码</p>
       <a-form-item name="password">
         <a-input
           class="reset-input"
