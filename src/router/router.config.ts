@@ -42,6 +42,47 @@ export const accessRoutes: RouteRecordRaw[] = [
         },
       },
       {
+        path: '/app/hotel',
+        name: 'hotel',
+        component: () => import('/@/views/hotel/index.vue'),
+        meta: {
+          title: '酒店管理',
+          keepAlive: true,
+          icon: 'rili',
+        },
+      },
+      {
+        path: '/app/membership',
+        name: 'membership',
+        component: () => import('/@/views/membership/index.vue'),
+        meta: {
+          title: '会员管理',
+          keepAlive: true,
+          icon: 'rili',
+        },
+      },
+      {
+        path: '/app/permission',
+        name: 'permission',
+        component: () => import('/@/views/permission/index.vue'),
+        meta: {
+          title: '权限管理',
+          keepAlive: true,
+          icon: 'rili',
+        },
+      },
+      {
+        path: '/app/feedback',
+        name: 'feedback',
+        component: () => import('/@/views/feedback/index.vue'),
+        meta: {
+          title: '反馈管理',
+          keepAlive: true,
+          icon: 'rili',
+        },
+      },
+
+      {
         path: '/app/others',
         name: 'others',
         component: BlankLayout,

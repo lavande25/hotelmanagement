@@ -14,6 +14,18 @@
       :actions="tableActions"
       :model="tableFilterModel"
     />
+
+    <!-- data
+
+Example Value
+Model
+{
+  "ID": 0,
+  "Month": 0,
+  "Name": "string",
+  "Price": 0,
+  "Priority": 0 -->
+    }
     <Modal v-bind="modalState" @cancel="handleCancel" @ok="handleSubmit">
       <a-form
         ref="FormRef"
