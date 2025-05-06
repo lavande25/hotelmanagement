@@ -3,16 +3,14 @@
  * @description 系统设置 - 账户模块
  */
 
-import { ReqAccount, ResAccount } from './model';
-import { get, post } from '/@/utils/http';
+import { ReqAccount } from './model';
+import { put } from '/@/utils/http';
 
 enum URL {
-  update = '/v1/account/edit',
-  account = '/v1/account/info',
+  update = '/manage/user/info',
+  // account = '/v1/account/info',
 }
 
-const account = async () => get<ResAccount>({ url: URL.account });
+const update = async (data: ReqAccount) => put<any>({ url: URL.update, data });
 
-const update = async (data: ReqAccount) => post<any>({ url: URL.update, data });
-
-export default { account, update };
+export default { update };

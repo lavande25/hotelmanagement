@@ -2,12 +2,8 @@
   <div class="form_box">
     <a-form :model="formModel" :rules="rules" @finish="handleFinish">
       <p class="text">请输入手机号登录</p>
-      <a-form-item name="username">
-        <a-input
-          class="reset-input"
-          v-model:value="formModel.username"
-          placeholder="管理员：admin，普通：test"
-        >
+      <a-form-item name="Username">
+        <a-input class="reset-input" v-model:value="formModel.Username" placeholder="">
           <template #prefix>
             <!-- <user-outlined class="icon" type="user" /> -->
             <Icon size="24px" type="shoujihaodenglu" class="icon" />
@@ -15,12 +11,12 @@
         </a-input>
       </a-form-item>
       <p class="text">请输入密码</p>
-      <a-form-item name="password">
+      <a-form-item name="Password">
         <a-input
           class="reset-input"
-          v-model:value="formModel.password"
-          type="password"
-          placeholder="密码为 123456"
+          v-model:value="formModel.Password"
+          type="Password"
+          placeholder=""
         >
           <template #prefix>
             <!-- <lock-outlined class="icon" /> -->
@@ -42,7 +38,7 @@
         <a-button html-type="submit" class="btn" :loading="loading">立即登录</a-button>
       </a-form-item>
     </a-form>
-    <p class="copyright">@copyright JS-banana</p>
+    <!-- <p class="copyright">@copyright </p> -->
   </div>
 </template>
 <script setup lang="ts">
@@ -88,8 +84,8 @@
 
   const checked = ref(true);
   const formModel = reactive({
-    username: '',
-    password: '',
+    Username: '',
+    Password: '',
   });
 
   const handleFinish = async (values) => {
@@ -98,8 +94,7 @@
     const res = await userStore.login(values);
     loading.value = false;
     if (res) {
-      // message.success('成功');
-      // router.replace({ path: state.redirect || '/', query: state.otherQuery });
+      console.info('res', res);
       router.replace('/');
     }
   };

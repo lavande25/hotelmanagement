@@ -1,4 +1,4 @@
-import { UserConfig, ConfigEnv } from 'vite';
+import { UserConfig, ConfigEnv, loadEnv } from 'vite';
 import { resolve } from 'path';
 import { createVitePlugins } from './config/vite/plugin';
 import proxy from './config/vite/proxy';
@@ -13,9 +13,13 @@ function pathResolve(dir: string) {
 // https://vitejs.dev/config/
 export default ({ command, mode }: ConfigEnv): UserConfig => {
   const isBuild = command === 'build';
-  console.log(command, mode);
+  const env = loadEnv(mode, process.cwd());
+  console.log(command, mode, env, '---------');
 
   return {
+    define: {
+      'process.env': env,
+    },
     resolve: {
       alias: [
         // /@/xxxx => src/xxxx

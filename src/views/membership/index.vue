@@ -1,7 +1,7 @@
 <template>
   <div class="node-conatiner">
     <h3 class="nc_title font18">会员套餐</h3>
-    <a-button type="primary" @click="handleAdd">新增</a-button>
+    <a-button type="primary" @click="handleAdd" class="add_btn">新增</a-button>
 
     <a-table
       :columns="columns"
@@ -12,8 +12,8 @@
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'operation'">
           <div class="editable-row-operations">
-            <span @click="handleEdit(record.ID)"> 编辑 </span>
-            <span @click="handleDelete(record.ID)"> 删除 </span>
+            <span @click="handleEdit(record)"> 编辑 </span>
+            <!-- <span @click="handleDelete(record.ID)"> 删除 </span> -->
           </div>
         </template>
       </template>
@@ -27,20 +27,21 @@
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
       >
-        <a-form-item label="ID:" name="id">
-          <a-input v-model:value="formModel.ID" placeholder="请输入id" />
+        <a-form-item label="是否是会员" name="IsPrime">
+          <a-switch v-model:checked="formModel.IsPrime" />
         </a-form-item>
+
         <a-form-item label=":套餐名称" name="Name">
           <a-input v-model:value="formModel.Name" placeholder="套餐名称" />
         </a-form-item>
         <a-form-item label="有效期:" name="Month">
-          <a-input v-model:value="formModel.Month" placeholder="请输入有效期" />
+          <a-input v-model:value="formModel.Month" pattern="\d*" placeholder="请输入有效期" />
         </a-form-item>
         <a-form-item label="优先级:" name="Priority">
-          <a-input v-model:value="formModel.Priority" placeholder="请输入用户手机号" />
+          <a-input v-model:value="formModel.Priority" pattern="\d*" placeholder="请输入优先级" />
         </a-form-item>
         <a-form-item label="价格:" name="Price">
-          <a-input v-model:value="formModel.Price" placeholder="价格" />
+          <a-input v-model:value="formModel.Price" pattern="\d*" placeholder="价格" />
         </a-form-item>
       </a-form>
     </Modal>
@@ -48,12 +49,14 @@
 </template>
 <script setup lang="ts">
   import { columns } from './constant';
-  import type { TablePaginationConfig } from 'ant-design-vue/lib/table';
+  import primeAPi from '/@/api/prime';
   import type { FormInstance } from 'ant-design-vue';
   import type { Rule } from 'ant-design-vue/es/form';
   const FormRef = ref<FormInstance>();
   const labelCol = { style: { width: '110px' } };
   const wrapperCol = { span: 17 };
+  import { useMessage } from '/@/hooks/useMessage';
+  const { createMessage } = useMessage();
 
   // modal
   const modalState = reactive({
@@ -75,63 +78,35 @@
   };
 
   const formModel = ref({
-    ID: '',
+    IsPrime: null,
     Name: '',
-    Month: '',
-    Priority: '',
-    Price: '',
+    Month: 0,
+    Priority: 0,
+    Price: 0,
   });
+  const editId = ref(null);
 
-  const pagination = ref<TablePaginationConfig>({
-    current: 1,
-    pageSize: 10,
-    total: 0,
+  //分页数据
+  const pagination = ref({
+    total: 100, // 设置总记录数，根据总记录数和每页条数计算总页数
+    pageSize: 10, // 每页显示的记录数
+    current: 1, // 当前页码
     showSizeChanger: true,
     pageSizeOptions: ['10', '20', '30'],
+    showTotal: (total) => `共 ${total} 条`,
   });
-
-  // 模拟接口请求
-  const fetchData = async (
-    page: number,
-    pageSize: number,
-  ): Promise<{ data: any[]; total: number }> => {
-    // 这里可以替换为实际的接口调用
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const mockData: any[] = [];
-        for (let i = 0; i < 100; i++) {
-          mockData.push({
-            ID: i,
-            Priority: i,
-            Price: `1${i}`,
-            Month: `2025-040${i}`,
-            Name: `aa. ${i}`,
-          });
-        }
-        const filteredData = mockData;
-        const startIndex = (page - 1) * pageSize;
-        const endIndex = startIndex + pageSize;
-        const paginatedData = filteredData.slice(startIndex, endIndex);
-        resolve({
-          data: paginatedData,
-          total: filteredData.length,
-        });
-      }, 500);
-    });
-  };
 
   //const searchText = ref('');
   const tableData = ref<any[]>([]);
 
   const loadData = async (
-    page: number = pagination.value.current ?? 1,
-    pageSize: number = pagination.value.pageSize ?? 10,
+    Page: number = pagination.value.current ?? 1,
+    Size: number = pagination.value.pageSize ?? 10,
     // search: string = searchText.value ?? '',
   ) => {
-    console.info(page, pageSize, 'zh----');
-    const result = await fetchData(page, pageSize);
-    tableData.value = result.data;
-    pagination.value.total = result.total;
+    const result = await primeAPi.List({ Page, Size });
+    tableData.value = result?.Data || [];
+    pagination.value.total = result?.Total || 0;
   };
 
   // const handleSearch = () => {
@@ -139,11 +114,11 @@
   //   loadData();
   // };
 
-  const handleTableChange = (pag: TablePaginationConfig) => {
-    const { current, pageSize } = pag;
+  const handleTableChange = (paginations) => {
+    const { current, pageSize } = paginations;
     pagination.value.current = current;
     pagination.value.pageSize = pageSize;
-    loadData(current, pageSize);
+    loadData();
   };
 
   const handleCancel = () => {
@@ -154,6 +129,7 @@
   //新增会员套餐
 
   const handleAdd = () => {
+    FormRef.value?.resetFields();
     modalState.title = '新增会员套餐';
     modalState.okText = '保存';
     modalState.visible = true;
@@ -163,27 +139,49 @@
     FormRef.value
       ?.validate()
       .then(async () => {
-        // modalState.loading = true;
-        // const req = modalState.title === '新增用户' ? store.fetchCreate : store.fetchUpdate;
-        // const res = await mockReq(formModel.value);
-        // modalState.loading = false;
+        let res;
+        formModel.value.Month = Number(formModel.value.Month);
+        formModel.value.Priority = Number(formModel.value.Priority);
+        formModel.value.Price = Number(formModel.value.Price);
+        if (modalState.title === '编辑会员套餐') {
+          formModel.value['ID'] = editId.value;
+        } else {
+          formModel.value['ID'] ? delete formModel.value['ID'] : '';
+        }
+        modalState.title === '编辑会员套餐'
+          ? (res = await primeAPi.update(formModel.value))
+          : (res = await primeAPi.add(formModel.value));
+        console.info(res, 'res');
+
+        if (!res.ErrorMsg) {
+          modalState.visible = false;
+          loadData();
+        } else {
+          createMessage.error(res.ErrorMsg);
+        }
       })
       .catch(console.log);
   };
 
   //编辑
 
-  const handleEdit = (id) => {
-    console.info(id);
+  const handleEdit = (row) => {
+    console.info(row, 'row');
     modalState.title = '编辑会员套餐';
     modalState.okText = '保存';
     modalState.visible = true;
+    editId.value = row.ID;
+    formModel.value.Name = row.Name;
+    formModel.value.IsPrime = row.IsPrime;
+    formModel.value.Month = row.Month;
+    formModel.value.Price = row.Price;
+    formModel.value.Priority = row.Priority;
   };
 
   //删除
-  const handleDelete = (id) => {
-    console.info('删除', id);
-  };
+  // const handleDelete = (id) => {
+  //   console.info('删除', id);
+  // };
 
   onMounted(() => {
     loadData();
@@ -200,7 +198,11 @@
       span {
         color: #3860f4;
         padding-left: 10px;
+        cursor: pointer;
       }
+    }
+    .add_btn {
+      margin-bottom: 20px;
     }
   }
 </style>

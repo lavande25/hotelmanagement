@@ -1,13 +1,18 @@
 <template>
   <div class="node-conatiner">
     <h3 class="nc_title font18">反馈管理</h3>
+
     <!-- :data-source="dataSource" -->
-    <a-input-search
-      v-model:value="searchText"
-      placeholder="请输入搜索内容"
-      @search="handleSearch"
-      style="width: 200px; margin-bottom: 16px"
-    />
+    <div class="btn_search">
+      <a-input-search
+        v-model:value="searchText"
+        placeholder="请输入搜索内容"
+        @search="handleSearch"
+        style="width: 200px"
+      />
+      <a-button @click="Handlereset">重置</a-button>
+    </div>
+
     <a-table
       :columns="columns"
       :data-source="tableData"
@@ -19,6 +24,12 @@
           <div class="editable-row-operations">
             <span @click="handleReply(record)"> 回复 </span>
           </div>
+        </template>
+        <template v-if="column.dataIndex === 'CreatedAt'">
+          <span>{{ record.CreatedAt ? formatToDate(record.CreatedAt) : '' }}</span>
+        </template>
+        <template v-if="column.dataIndex === 'UpdatedAt'">
+          <span>{{ record.UpdatedAt ? formatToDate(record.UpdatedAt) : '' }}</span>
         </template>
       </template>
     </a-table>
@@ -32,13 +43,7 @@
         :wrapper-col="wrapperCol"
       >
         <a-form-item label="FeedbackID:" name="FeedbackID">
-          <a-input v-model:value="formModel.FeedbackID" />
-        </a-form-item>
-        <a-form-item label="ID:" name="ID">
-          <a-input v-model:value="formModel.ID" />
-        </a-form-item>
-        <a-form-item label="UserID:" name="UserID">
-          <a-input v-model:value="formModel.UserID" />
+          <a-input v-model:value="formModel.FeedbackID" :disabled="true" />
         </a-form-item>
         <a-form-item label="msg:" name="msg">
           <a-input v-model:value="formModel.msg" />
@@ -50,75 +55,40 @@
 
 <script setup lang="ts">
   import { columns } from './constant';
-  import type { TablePaginationConfig } from 'ant-design-vue/lib/table';
+  import feedbackAPi from '/@/api/feedback';
   import type { FormInstance } from 'ant-design-vue';
   const FormRef = ref<FormInstance>();
   import type { Rule } from 'ant-design-vue/es/form';
-  //import { UserDeleteOutlined } from '@ant-design/icons-vue';
   const labelCol = { style: { width: '110px' } };
   const wrapperCol = { span: 17 };
+  import { useMessage } from '/@/hooks/useMessage';
+  const { createMessage } = useMessage();
+  import { formatToDate } from '/@/utils/dateUtil';
 
   const rules: Record<string, Rule[]> = {
     msg: [{ required: true, trigger: 'blur' }],
   };
 
-  const pagination = ref<TablePaginationConfig>({
-    current: 1,
-    pageSize: 10,
-    total: 0,
+  const pagination = ref({
+    total: 100, // 设置总记录数，根据总记录数和每页条数计算总页数
+    pageSize: 10, // 每页显示的记录数
+    current: 1, // 当前页码
     showSizeChanger: true,
     pageSizeOptions: ['10', '20', '30'],
+    showTotal: (total) => `共 ${total} 条`,
   });
-
-  // 模拟接口请求
-  const fetchData = async (
-    page: number,
-    pageSize: number,
-    // search: string,
-  ): Promise<{ data: any[]; total: number }> => {
-    // 这里可以替换为实际的接口调用
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const mockData: any[] = [];
-        for (let i = 0; i < 100; i++) {
-          mockData.push({
-            ID: i,
-            UserID: i,
-            // FeedbackReply: {
-            //   msg: `回复反馈${i}`,
-            //   FeedbackID: i,
-            // },
-            FeedbackReply: `回复反馈${i}`,
-            Telephone: '15011494567',
-            Demand: '需求',
-            Images:
-              'https://tse4-mm.cn.bing.net/th/id/OIP-C.WRt9evHqLsC2RwMpDz8GQwHaNK?rs=1&pid=ImgDetMain',
-          });
-        }
-        const filteredData = mockData;
-        const startIndex = (page - 1) * pageSize;
-        const endIndex = startIndex + pageSize;
-        const paginatedData = filteredData.slice(startIndex, endIndex);
-        resolve({
-          data: paginatedData,
-          total: filteredData.length,
-        });
-      }, 500);
-    });
-  };
 
   const searchText = ref('');
   const tableData = ref<any[]>([]);
 
   const loadData = async (
-    page: number = pagination.value.current ?? 1,
-    pageSize: number = pagination.value.pageSize ?? 10,
-    search: string = searchText.value ?? '',
+    Page: number = pagination.value.current ?? 1,
+    Size: number = pagination.value.pageSize ?? 10,
+    // search: string = searchText.value ?? '',
   ) => {
-    console.info(page, pageSize, search, 'zh----');
-    const result = await fetchData(page, pageSize);
-    tableData.value = result.data;
-    pagination.value.total = result.total;
+    const result = await feedbackAPi.feedbackList({ Page, Size });
+    tableData.value = result?.Data || [];
+    pagination.value.total = result?.Total || 0;
   };
 
   //搜索
@@ -128,12 +98,18 @@
     loadData();
   };
 
-  const handleTableChange = (pag: TablePaginationConfig) => {
-    const { current, pageSize } = pag;
+  const handleTableChange = (paginations) => {
+    const { current, pageSize } = paginations;
     pagination.value.current = current;
     pagination.value.pageSize = pageSize;
-    loadData(current, pageSize);
+    loadData();
   };
+
+  const Handlereset = () => {
+    searchText.value = '';
+    loadData();
+  };
+
   // modal
   const modalState = reactive({
     loading: false,
@@ -143,9 +119,7 @@
   });
 
   const formModel = ref({
-    ID: '',
-    FeedbackID: '',
-    UserID: '',
+    FeedbackID: 0,
     msg: '',
   });
 
@@ -154,30 +128,28 @@
     FormRef.value?.resetFields();
   };
 
-  //新增会员套餐
+  //回复
 
   const handleReply = (row: any) => {
     modalState.title = '回复';
     modalState.okText = '保存';
     modalState.visible = true;
-    formModel.value.ID = row.ID;
-    formModel.value.UserID = row.UserID;
-    formModel.value.FeedbackID = '12';
+    formModel.value.FeedbackID = row.ID;
     console.info(row, 'row');
   };
+
   const handleSubmit = () => {
     FormRef.value
       ?.validate()
       .then(async () => {
-        modalState.loading = true;
-        // const req = modalState.title === '新增用户' ? store.fetchCreate : store.fetchUpdate;
-
-        // if (res) {
-        //   createMessage.success(`${modalState.title === '新增用户' ? '新增' : '修改'}用户成功`);
-        //   handleCancel();
-        //   console.log('ELRef.value', ELRef.value);
-        //   refresh();
-        // }
+        const res = await feedbackAPi.replyFeedback(formModel.value);
+        if (!res.ErrorMsg) {
+          createMessage.success('回复成功');
+          modalState.visible = false;
+          loadData();
+        } else {
+          createMessage.error(res.ErrorMsg);
+        }
       })
       .catch(console.log);
   };
@@ -190,12 +162,25 @@
   .node-conatiner {
     .nc_title {
       margin-top: 6px;
-      margin-bottom: 30px;
+      margin-bottom: 60px;
     }
     .ui_image {
       display: block;
       width: 50px;
       height: 50px;
+    }
+    .btn_search {
+      top: 62px;
+      right: -48px;
+      position: absolute;
+      width: 340px;
+    }
+    .editable-row-operations {
+      span {
+        color: #3860f4;
+        padding-left: 10px;
+        cursor: pointer;
+      }
     }
   }
 </style>

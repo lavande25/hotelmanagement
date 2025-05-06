@@ -4,27 +4,24 @@
     <div class="content">
       <div class="content_left">
         <!-- <div class="img"><img src="" alt="" /></div> -->
-        <a-avatar :size="100" :src="avatar" />
+        <!-- <a-avatar :size="100" :src="avatar" /> -->
       </div>
       <div class="content_right">
         <a-row class="row" v-for="item in columns" :key="item.label">
           <a-col :span="12">
             <a-space>
               <div class="label-w">{{ item.label }}</div>
-              <div v-if="modifyItem.key === item.key">
-                <a-input v-model:value="modifyItem.value" />
+              <div>
+                <a-input v-model:value="accountInfo[item.key]" />
               </div>
-              <div v-else>{{ item.value }}</div>
             </a-space>
           </a-col>
-          <a-col :span="12">
-            <a-space v-if="modifyItem.key === item.key">
+        </a-row>
+        <a-row>
+          <a-col :span="24">
+            <a-space class="save_btn">
               <a @click="handleSubmit">保存</a>
-              <a @click="handleCancle">取消</a>
             </a-space>
-            <div v-else>
-              <a-button v-if="item.isEdit" type="link" @click="handleClick(item)"> 修改 </a-button>
-            </div>
           </a-col>
         </a-row>
       </div>
@@ -32,57 +29,71 @@
   </a-spin>
 </template>
 <script setup lang="ts">
-  import avatar from '/@/assets/images/avatar.png';
+  //import avatar from '/@/assets/images/avatar.png';
   import { KeyValue } from './constant';
-  import { useSysAccountStore } from '/@/store/modules/sysAccount';
+  import accountAPi from '/@/api/sys/account';
   import { useMessage } from '/@/hooks/useMessage';
-
   const { createMessage } = useMessage();
-  const store = useSysAccountStore();
+  //import { useSysAccountStore } from '/@/store/modules/sysAccount';
+  // import { useMessage } from '/@/hooks/useMessage';
 
-  const initVal = {
-    key: '',
-    value: '',
-  };
+  //const { createMessage } = useMessage();
+  //const store = useSysAccountStore();
+
+  // const initVal = {
+  //   key: '',
+  //   value: '',
+  // };
+  const accountInfo = ref({
+    Telephone: '',
+    Password: '',
+    OldPassword: '',
+  });
 
   const loading = ref(false);
   const columns = ref(KeyValue);
-  const modifyItem = ref(initVal);
-  const account = computed(() => store.getAccount);
+  //const modifyItem = ref(initVal);
+  //const account = computed(() => store.getAccount);
 
-  watch(
-    () => account.value,
-    (val) => {
-      columns.value = KeyValue.map((n) => ({
-        ...n,
-        value: toRaw(val)?.[n.key] || n.value,
-      }));
-    },
-  );
+  // watch(
+  //   () => account.value,
+  //   (val) => {
+  //     columns.value = KeyValue.map((n) => ({
+  //       ...n,
+  //       value: toRaw(val)?.[n.key] || n.value,
+  //     }));
+  //   },
+  // );
 
-  onMounted(() => store.fetchAccount());
+  //onMounted(() =>
+  // store.fetchAccount()
+  //);
 
-  onUnmounted(() => store.resetState());
+  //onUnmounted(() =>
+  //store.resetState()
+  //);
 
   //
-  const handleClick = (item) => {
-    modifyItem.value = item.key === 'password' ? { ...item, value: '' } : item;
-  };
+  // const handleClick = (item) => {
+  //   modifyItem.value = item.key === 'password' ? { ...item, value: '' } : item;
+  // };
 
-  const handleCancle = () => {
-    modifyItem.value = initVal;
-  };
+  // const handleCancle = () => {
+  //   //  modifyItem.value = initVal;
+  // };
 
   const handleSubmit = async () => {
-    const { key, value } = unref(modifyItem);
-    // const params = { id: account.value!.user_id, [key]: value };
-    //
-    console.log('当前修改内容', { [key]: value });
-    loading.value = true;
-    // await store.fetchAccountUpdate(params);
-    createMessage.success(`当前修改内容为：{ ${key}: ${value} }`);
-    loading.value = false;
-    handleCancle();
+    console.info(accountInfo.value, 'accountInfo');
+    const result = await accountAPi.update(accountInfo.value);
+    console.info(result, 'result');
+    if (!result.ErrorMsg) {
+      createMessage.success('修改成功');
+      accountInfo.value.OldPassword = '';
+      accountInfo.value.Telephone = '';
+      accountInfo.value.Password = '';
+    } else {
+      createMessage.error(result.ErrorMsg);
+    }
   };
 </script>
 <style lang="less" scoped>
@@ -123,6 +134,11 @@
           background-color: #fafafa;
         }
       }
+    }
+    .save_btn {
+      font-size: 18px;
+      margin-top: 30px;
+      margin-left: 30px;
     }
   }
 </style>

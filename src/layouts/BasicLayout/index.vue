@@ -86,4 +86,9 @@
       background: '#F0F1F4';
     }
   }
+  .layout {
+    .ant-layout-content {
+      transition: none;
+    }
+  }
 </style>

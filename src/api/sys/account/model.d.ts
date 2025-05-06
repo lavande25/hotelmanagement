@@ -1,7 +1,7 @@
 export interface ReqAccount {
-  id: number;
-  account?: string;
-  password?: string;
+  Telephone: string;
+  Password?: string;
+  OldPassword?: string;
 }
 
 export interface ResAccount {

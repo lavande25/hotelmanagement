@@ -8,27 +8,31 @@ export const columns: ColumnProps[] = [
     dataIndex: 'ID',
   },
   {
-    title: '街道',
-    dataIndex: 'Address',
+    title: '模块',
+    dataIndex: 'Module',
   },
   {
-    title: '银行账号',
-    dataIndex: 'BankAccount',
+    title: '方法',
+    dataIndex: 'Methods',
   },
   {
-    title: '银行地址',
-    dataIndex: 'BankAddress',
+    title: 'URL',
+    dataIndex: 'Url',
   },
   {
-    title: '公司',
-    dataIndex: 'Company',
+    title: '酒店',
+    dataIndex: 'Hotel',
   },
   {
-    title: '邀请人',
-    dataIndex: 'InvitedBy',
+    title: '用户',
+    dataIndex: 'User',
   },
   {
-    title: '酒店名称',
-    dataIndex: 'Name',
+    title: '开始时间',
+    dataIndex: 'TimestampFrom',
+  },
+  {
+    title: '结束时间',
+    dataIndex: 'TmestampTo',
   },
 ];

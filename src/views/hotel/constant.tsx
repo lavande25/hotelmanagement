@@ -31,4 +31,8 @@ export const columns: ColumnProps[] = [
     title: '酒店名称',
     dataIndex: 'Name',
   },
+  {
+    title: '操作',
+    dataIndex: 'operation',
+  },
 ];

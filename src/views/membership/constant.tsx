@@ -12,6 +12,11 @@ export const columns: ColumnProps[] = [
     dataIndex: 'Month',
   },
   {
+    title: '会员',
+    dataIndex: 'IsPrime',
+    customRender: () => <span>{'是'}</span>,
+  },
+  {
     title: '价格',
     dataIndex: 'Price',
   },

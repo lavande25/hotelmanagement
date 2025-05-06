@@ -1,14 +1,12 @@
 # vite-vue3-ts
 
-[![ci](https://github.com/JS-banana/vite-vue3-ts/actions/workflows/deploy.yml/badge.svg)](https://github.com/JS-banana/vite-vue3-ts/actions/workflows/deploy.yml)
+# vite3.x要求node14.18及以上
 
 ## 介绍
 
 一个使用 `vite` + `vue3` + `pinia` + `ant-design-vue` + `typescript` 完整技术路线开发的项目，秒级开发更新启动、新的`vue3 composition api` 结合 `setup`纵享丝滑般的开发体验、全新的 `pinia`状态管理器和优秀的设计体验（`1k`的size）、`antd`无障碍过渡使用UI组件库 `ant-design-vue`、安全高效的 `typescript`类型支持、代码规范验证、多级别的权限管理~
 
-相关文章：<https://juejin.cn/post/7041188884864040991>
 
-本项目相关改动及更新见【[更新记录](#更新记录)↓↓↓】
 
 ## 特性
 
@@ -77,17 +75,11 @@
 
 ## 使用说明
 
-> 简要说明：
->
-> 随着vite3.x的发布，本项目针对该依赖的相关生态做了升级，详情见分支 [feat-vite3.x](https://github.com/JS-banana/vite-vue3-ts/tree/feat-vite3.x)
->
-> 需要指出的是vite3.x要求node14.18及以上，详情见 [从 v2 迁移](https://cn.vitejs.dev/guide/migration.html)
+
 
 1. 克隆本项目
 
-    ```sh
-    git clone https://github.com/JS-banana/vite-vue3-ts.git
-    ```
+  
 
 2. 安装依赖
 
@@ -188,43 +180,9 @@ const refresh = () => ELRef.value?.refresh();
 
 ## 效果图
 
-![vite-vue3-3](https://cdn.jsdelivr.net/gh/JS-banana/images/vuepress/vite-vue3-3.jpg)
 
-![vite-vue3-4](https://cdn.jsdelivr.net/gh/JS-banana/images/vuepress/vite-vue3-4.jpg)
 
-## 更新记录
 
-- 2022.01.18
-  - 增加环境变量配置文件 `.env`/`.env.development`/`.env.production`
-- 2022.03.09
-  - 为了优化服务器构建，移除 `auto-imports.d.ts`、`components.d.ts`的git记录，加入`.gitignore`
-  - 域名二级目录的路由配置优化 `history: createWebHistory(import.meta.env.BASE_URL)`
-  - 路由模式由 hash调整为 history
-- 2022.05.07
-  - 添加路由动效`transition`，优化用户体验，并抽离封装`Breadcrumb`组件
-  - 添加权限指令`v-role`，调整权限逻辑，目前权限指令包括`v-role`/`v-auth`
-  - `Table`相关组件有所改动，同步迭代了一些功能点，包括优化项
-  - 建议配合该篇文章食用[多级别权限设计思考及实战](https://ssscode.com/pages/ff7971/)
-- 2022.06.21
-  - `ant-design-vue`升级到`3.x`版本，同步更新改动了一些API
-  - `dayjs`替换`moment`
-- 2022.07.24
-  - ✔完善`Table`组件，更新了一些在项目中迭代的优化
-  - ✔优化`Table`相关`API`，遵循`ant-design-vue3.x`官方用法进行迭代
-  - ✔新增`Table`使用demo，增加各API用法示例，基本涵盖大部分用法
-  - ✔新增`fakerjs`数据mock，配合`Mockjs`完善并增强对不同数据类型和场景的模拟
-  - ✔完善文档，新增使用说明
-  - [PR](https://github.com/JS-banana/vite-vue3-ts/pull/6)
-- 2022.07.30
-  - vite相关工具链升级到3.x
-  - 现在你必须使用 Node 14.18+ / 16+ 版本。
-  - 详情见分支 [feat-vite3.x](https://github.com/JS-banana/vite-vue3-ts/tree/feat-vite3.x)
-  - 原有的vite2.x版本见分支 [feat-vite2.x](https://github.com/JS-banana/vite-vue3-ts/tree/feat-vite2.x)
-  - 现在master主分支为最新的vite3.x版本
-- 2023.09.20
-  - vite相关工具链升级到4.x
-  - 详情见分支 feat-vite4.x
-  - 现在master主分支为最新的vite4.x版本
 
 ## 计划
 
@@ -232,18 +190,7 @@ const refresh = () => ELRef.value?.refresh();
 - [ ] 主题换肤功能
 - [ ] 引入 `tailwindcss`
 
-## 交流
 
-你可以关注我公众号（前端小帅），加我微信交流，一起沟通学习~
 
-<table>
-  <tr>
-    <td valign="top">
-      <img height="160" alt="公众号：前端小帅" src="https://cdn.jsdelivr.net/gh/JS-banana/images/vuepress/4.png" />
-    </td>
-  </tr>
-</table>
 
-## 感谢star
 
-[![Stargazers over time](https://starchart.cc/JS-banana/vite-vue3-ts.svg)](https://starchart.cc/JS-banana/vite-vue3-ts)

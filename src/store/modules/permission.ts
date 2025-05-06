@@ -45,8 +45,13 @@ export const usePermissioStore = defineStore({
     },
   },
   actions: {
-    setAuth(auths: string[], modules: string[]) {
-      this.auths = auths;
+    // setAuth(auths: string[], modules: string[]) {
+    //   this.auths = auths;
+    //   this.isGetUserInfo = true;
+    //   this.modules = modules;
+    // },
+    setAuth(modules: string[]) {
+      this.auths = [];
       this.isGetUserInfo = true;
       this.modules = modules;
     },
@@ -68,8 +73,10 @@ export const usePermissioStore = defineStore({
     async fetchAuths() {
       const res = await fetchApi.permission();
       if (res) {
-        this.setAuth(res.auths, res.modules);
-        this.setIsAdmin(res.is_admin || 0);
+        this.setAuth(res.modules);
+        // this.setAuth(res.auths, res.modules);
+        //  this.setIsAdmin(res.is_admin || 0);
+        this.setIsAdmin(0);
       }
       return res;
     },

@@ -1,13 +1,18 @@
 import { ReqParams, ResResult } from './model';
-import { get } from '/@/utils/http';
+import { get, del } from '/@/utils/http';
 
 enum URL {
-  list = '/v1/node/nodelist',
+  list = '/manage/hotel',
+  //delte = '/manage/hotel',
 }
 
-const hotellist = async (data: ReqParams) => {
+const hotelList = async (data: ReqParams) => {
   console.info('ReqParams', data);
-  return get<ResResult>({ url: URL.list, data });
+  return get<ResResult>({ url: URL.list, params: data });
 };
 
-export default { hotellist };
+const deleteHotel = async (data) => {
+  return del({ url: URL.list, data });
+};
+
+export default { hotelList, deleteHotel };

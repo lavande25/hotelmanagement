@@ -4,17 +4,18 @@
  */
 
 // 应用名
-export const APP_TITLE = 'Vite-Vue3-Admin';
+export const APP_TITLE = 'Ims-webapp';
 
 // 本地服务端口
 export const VITE_PORT = 3000;
 
 // prefix
-export const API_PREFIX = '/api';
+export const API_PREFIX = '/ims-webapp';
 
 // serve
-export const API_BASE_URL = '/api';
-export const API_TARGET_URL = 'http://localhost:3000';
+export const API_BASE_URL = '/ims-webapp';
+///ims-webapp/xx/xx
+export const API_TARGET_URL = 'http://101.43.59.126:30001';
 
 // mock
 export const MOCK_API_BASE_URL = '/mock/api';

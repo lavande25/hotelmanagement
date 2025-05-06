@@ -7,6 +7,7 @@ package-lock.json
 yarn.lock
 
 .local
+.cursor
 # local env files
 .env.local
 .env.*.local
@@ -29,3 +30,6 @@ pnpm-debug.log*
 
 **/src/auto-imports.d.ts
 **/src/components.d.ts
+dist
+dist.zip
+my.md

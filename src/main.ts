@@ -8,7 +8,6 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import { router } from './router';
 import { store } from './store';
-import { setupGlobDirectives } from './directives';
 import './router/permission';
 // import { setupComponents } from './plugin';
 
@@ -19,7 +18,7 @@ app.use(store);
 app.use(router);
 
 // Register global directive
-setupGlobDirectives(app);
+// setupGlobDirectives(app);
 
 // Register UI components
 // setupComponents(app);

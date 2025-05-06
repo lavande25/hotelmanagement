@@ -3,6 +3,10 @@
  */
 // import moment from 'moment';
 import dayjs from 'dayjs';
+import utcPlugin from 'dayjs/plugin/utc';
+import timezonePlugin from 'dayjs/plugin/timezone';
+dayjs.extend(utcPlugin);
+dayjs.extend(timezonePlugin);
 
 const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 const DATE_FORMAT = 'YYYY-MM-DD ';

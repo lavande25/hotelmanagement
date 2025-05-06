@@ -1,16 +1,18 @@
 export interface ReqParams {
-  mobile: 'string';
+  name: 'string';
   password: 'string';
 }
 
 export interface ReqAuth {
-  auths: string[];
+  // auths: string[];
   modules: string[];
-  is_admin?: 0 | 1;
+  //  is_admin?: 0 | 1;
 }
 
 export interface ResResult {
-  login_status: number;
-  st: string;
-  token: string;
+  // login_status: number;
+  // st: string;
+  Data: {
+    Token: string;
+  };
 }

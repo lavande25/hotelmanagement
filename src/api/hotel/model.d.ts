@@ -1,10 +1,10 @@
 export interface ReqParams {
-  hotel: string;
-  page: number;
-  size: number;
+  Page: number;
+  Size: number;
+  Hotel: string;
 }
 
-export interface ResResult {
+export interface ResInfoListItem {
   Address: string;
   BankAccount: string;
   BankAddress: string;
@@ -15,3 +15,13 @@ export interface ResResult {
   SocialCode: string;
   Telephone: string;
 }
+
+export interface ResResult {
+  Total: number;
+  Data: ResInfoListItem[];
+}
+
+export interface ReqDeleteParams {
+  params: (string | number)[];
+}
+//[key: string]: number | string | boolean;

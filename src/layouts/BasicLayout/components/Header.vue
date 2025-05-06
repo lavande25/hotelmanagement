@@ -2,7 +2,7 @@
   <a-layout-header class="header">
     <div class="logo-wrap">
       <router-link :to="{ path: '/' }">
-        <img :src="logo" class="logo" />
+        <!-- <img :src="logo" class="logo" /> -->
         <h1 class="title"> {{ APP_TITLE }} </h1>
         <!-- <span class="subTitle">基础版</span> -->
       </router-link>
@@ -14,7 +14,7 @@
 </template>
 <script setup lang="ts">
   import RightContent from './RightContent.vue';
-  import logo from '/@/assets/images/logo.png';
+  //import logo from '/@/assets/images/logo.png';
   import { APP_TITLE } from '../../../../config/constant';
 </script>
 <style lang="less" scoped>

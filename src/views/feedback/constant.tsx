@@ -1,28 +1,4 @@
 import { ColumnProps } from 'ant-design-vue/es/table';
-//import { Tag, Tooltip, Space } from 'ant-design-vue';
-//import { QuestionCircleOutlined } from '@ant-design/icons-vue';
-// {
-//       "Demand": "string",
-//       "FeedbackReply": {
-//         "FeedbackID": 0,
-//         "ID": 0,
-//         "UserID": 0,
-//         "msg": "string"
-//       },
-//       "ID": 0,
-//       "Images": [
-//         "string"
-//       ],
-//       "RspFeedbackImages": [
-//         {
-//           "FeedbackID": 0,
-//           "ID": 0,
-//           "Url": "string"
-//         }
-//       ],
-//       "Telephone": "string",
-//       "UserID": 0
-//     }
 
 export const columns: ColumnProps[] = [
   {
@@ -35,12 +11,13 @@ export const columns: ColumnProps[] = [
   },
   {
     title: '图片',
-    dataIndex: 'Images',
+    dataIndex: '',
     width: 100,
     customRender: ({ record }: any) => (
       <a-image
         style={{ display: 'block', width: '50px', height: '50px' }}
         src={record.Images}
+        //src="https://staticweb.jiudianhui.com.cn/ims/dev/feedback/0/1743753660922.jpg"
         preview={false}
       />
     ),
@@ -50,7 +27,7 @@ export const columns: ColumnProps[] = [
     title: '反馈回复',
     dataIndex: 'FeedbackReply',
     //customRender: ({ FeedbackReply }: any) => <span>{FeedbackReply}</span>,
-    customRender: ({ record }: any) => <span>{record.FeedbackReply}</span>,
+    customRender: ({ record }: any) => <span>{record.FeedbackReply.msg}</span>,
   },
   {
     title: '电话',
@@ -61,7 +38,16 @@ export const columns: ColumnProps[] = [
     dataIndex: 'Demand',
   },
   {
+    title: '创建时间',
+    dataIndex: 'CreatedAt',
+  },
+  {
+    title: '更新时间',
+    dataIndex: 'UpdatedAt',
+  },
+  {
     title: '操作',
     dataIndex: 'operation',
+    width: 100,
   },
 ];
